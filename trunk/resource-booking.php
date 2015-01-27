@@ -13,7 +13,7 @@
  * @package           /
  *
  * @wordpress-plugin
- * Plugin Name:       WordPress Plugin Resource Booking
+ * Plugin Name:       Resource Booking
  * Plugin URI:        https://github.com/brescia123/resource-booking-wp-plugin
  * Description:       Simple Resource Booking Plugin
  * Version:           0.1.0

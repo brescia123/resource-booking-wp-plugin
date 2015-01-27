@@ -9,8 +9,8 @@
  * @link       http://example.com
  * @since      0.1.0
  *
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
+ * @package    Resource_Booking
+ * @subpackage Resource_Booking/includes
  */
 
 /**
@@ -20,11 +20,11 @@
  * so that it is ready for translation.
  *
  * @since      0.1.0
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
+ * @package    Resource_Booking
+ * @subpackage Resource_Booking/includes
  * @author     Your Name <email@example.com>
  */
-class Plugin_Name_i18n {
+class Resource_Booking_i18n {
 
 	/**
 	 * The domain specified for this plugin.

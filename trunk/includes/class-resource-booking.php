@@ -191,6 +191,7 @@ class Resource_Booking {
 		$plugin_cpts = new Resource_Booking_Cpts();
 
 		$this->loader->add_action( 'init', $plugin_cpts, 'register_cpts' );
+		$this->loader->add_action( 'add_meta_boxes_resource', $plugin_cpts, 'rb_add_meta_boxes' );
 
 	}
 

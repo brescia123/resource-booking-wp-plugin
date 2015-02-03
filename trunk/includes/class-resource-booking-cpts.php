@@ -28,31 +28,34 @@ class Resource_Booking_Cpts {
 	 */
 	public function register_cpts() {
 
+
+		// Resources Post Type
 		$labels = array(
-			'name'               => _x( 'Products', 'post type general name' ),
-			'singular_name'      => _x( 'Product', 'post type singular name' ),
-			'add_new'            => _x( 'Add New', 'book' ),
-			'add_new_item'       => __( 'Add New Product' ),
-			'edit_item'          => __( 'Edit Product' ),
-			'new_item'           => __( 'New Product' ),
-			'all_items'          => __( 'All Products' ),
-			'view_item'          => __( 'View Product' ),
-			'search_items'       => __( 'Search Products' ),
-			'not_found'          => __( 'No products found' ),
-			'not_found_in_trash' => __( 'No products found in the Trash' ), 
+			'name'               => _x( 'Resources', 'post type general name' ),
+			'singular_name'      => _x( 'Resource', 'post type singular name' ),
+			'add_new'            => _x( 'Add New', 'resource' ),
+			'add_new_item'       => __( 'Add New Resource' ),
+			'edit_item'          => __( 'Edit Resource' ),
+			'new_item'           => __( 'New Resource' ),
+			'all_items'          => __( 'All Resources' ),
+			'view_item'          => __( 'View Resource' ),
+			'search_items'       => __( 'Search Resources' ),
+			'not_found'          => __( 'No resources found' ),
+			'not_found_in_trash' => __( 'No resources found in the Trash' ), 
 			'parent_item_colon'  => '',
-			'menu_name'          => 'Products'
+			'menu_name'          => 'Resources'
 		);
 		$args = array(
 			'labels'        => $labels,
-			'description'   => 'Holds our products and product specific data',
+			'description'   => 'Holds resources for booking',
 			'public'        => true,
 			'menu_position' => 5,
-			'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments' ),
+			'menu_icon'		=> 'dashicons-screenoptions',
+			'supports'      => array( 'title', 'thumbnail', 'custom-fields' ),
 			'has_archive'   => true,
 		);
 
-		register_post_type( 'product', $args ); 
+		register_post_type( 'resource', $args ); 
 
 	}
 }

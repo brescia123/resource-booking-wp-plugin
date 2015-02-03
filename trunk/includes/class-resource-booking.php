@@ -165,8 +165,7 @@ class Resource_Booking {
 	}
 
 	/**
-	 * Register all of the hooks related to the public-facing functionality
-	 * of the plugin.
+	 * Register all of the hooks related to the plugin as the Custom Post Type ones
 	 *
 	 * @since    0.1.0
 	 * @access   private
@@ -180,6 +179,13 @@ class Resource_Booking {
 
 	}
 
+	/**
+	 * Register all of the hooks related to the public-facing functionality
+	 * of the plugin.
+	 *
+	 * @since    0.1.0
+	 * @access   private
+	 */
 	private function define_plugin_hooks() {
 
 		$plugin_cpts = new Resource_Booking_Cpts();

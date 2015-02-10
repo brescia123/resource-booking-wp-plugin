@@ -167,6 +167,8 @@ class Resource_Booking {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'add_meta_boxes_resource', $plugin_admin, 'rb_add_metaboxes' );
+		$this->loader->add_action( 'save_post_resource', $plugin_admin, 'rb_store_metaboxes', 10, 2 );
+
 
 	}
 
@@ -195,11 +197,8 @@ class Resource_Booking {
 	private function define_plugin_hooks() {
 
 		$plugin_cpts = new Resource_Booking_Cpts();
-				$plugin_admin = new Resource_Booking_Admin( $this->get_resource_booking(), $this->get_version() );
-
 
 		$this->loader->add_action( 'init', $plugin_cpts, 'register_cpts' );
-		$this->loader->add_action( 'add_meta_boxes_resource', $plugin_admin, 'rb_add_metaboxes' );
 
 	}
 

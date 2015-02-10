@@ -68,6 +68,7 @@ class Resource_Booking_Admin {
 	public function enqueue_styles() {
 
 		wp_enqueue_style( $this->Resource_Booking, plugin_dir_url( __FILE__ ) . 'css/resource-booking-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( 'fullcalendar', 'http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/'.self::FULLCALENDAR_VERSION.'/fullcalendar.min.css', array(), FULLCALENDAR_VERSION, 'all' );
 
 	}
 

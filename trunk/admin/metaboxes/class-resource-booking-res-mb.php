@@ -22,6 +22,18 @@
 
 class Resource_Booking_Res_Mb {
 
+	/* Constants */
+	const NONCE_NAME = 'rb_config_meta_box_nonce';
+
+	/**
+	 * The select field containing the time intervals
+	 *
+	 * @since    0.1.0
+	 * @access   private
+	 * @var      $time_interval_field    The array containing the informations of time intervals select field
+	 */
+	private $time_interval_field;
+
 	/**
 	 * Add the Metabox
 	 *
@@ -44,7 +56,7 @@ class Resource_Booking_Res_Mb {
 	 * @since    0.1.0
 	 */
  	public function rb_config_res_mb_callback( ) {
-		wp_nonce_field( 'rb_config_meta_box', 'rb_config_meta_box_nonce' );
+		wp_nonce_field( basename( __FILE__ ), self::NONCE_NAME );
 
 
 		// The values array represents the possible intervals, the value is in minutes
@@ -69,7 +81,7 @@ class Resource_Booking_Res_Mb {
 			);
 
 		// Get the field
-		$selected_time_interval = get_post_meta( $post->ID, '_my_meta_value_key', true );
+		// $selected_time_interval = get_post_meta( $post->ID, '_my_meta_value_key', true );
 
 		// Html for the meta_box
 		echo '<table class="form-table">';
@@ -90,6 +102,29 @@ class Resource_Booking_Res_Mb {
         // Calendar
 		echo '<div id="calendar"></div>';
 
+	}
+
+	/**
+	 * Store the values selected in the Metaboxes
+	 *
+	 * @since    0.1.0
+	 */
+	public function rb_store_mb_values($post_id, $post) {
+
+		/* Verify the nonce */
+		if(!isset($_POST[self::NONCE_NAME]) || !wp_verify_nonce($_POST[self::NONCE_NAME], basename( __FILE__ ))){
+			return $post_id;
+		}
+
+		/* Get the post type */
+  		$post_type = get_post_type_object( $post->post_type );
+
+		/* Check current user permission */
+  		if ( !current_user_can( $post_type->cap->edit_post, $post_id ) ){
+    		return $post_id;
+  		}
+
+		add_post_meta( $post_id, 'prova', $post );
 	}
 }
 

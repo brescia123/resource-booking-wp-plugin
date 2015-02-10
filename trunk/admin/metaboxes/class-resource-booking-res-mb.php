@@ -84,7 +84,12 @@ class Resource_Booking_Res_Mb {
     				}
     				echo '</select><br /><span class="description">'.$time_interval_field['desc'].'</span>';
         	echo '</td></tr>';
+
 		echo '</table>';
+
+        // Calendar
+		echo '<div id="calendar"></div>';
+
 	}
 }
 

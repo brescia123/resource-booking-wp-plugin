@@ -116,6 +116,11 @@ class Resource_Booking {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-resource-booking-cpts.php';
 
 		/**
+		 * The class responsible for defining the metabox for the Resource adimn page
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/metaboxes/class-resource-booking-res-mb.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the Dashboard.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-resource-booking-admin.php';
@@ -189,9 +194,10 @@ class Resource_Booking {
 	private function define_plugin_hooks() {
 
 		$plugin_cpts = new Resource_Booking_Cpts();
+		$res_mb = new Resource_Booking_Res_Mb();
 
 		$this->loader->add_action( 'init', $plugin_cpts, 'register_cpts' );
-		$this->loader->add_action( 'add_meta_boxes_resource', $plugin_cpts, 'rb_add_meta_boxes' );
+		$this->loader->add_action( 'add_meta_boxes_resource', $res_mb, 'rb_add_res_mb' );
 
 	}
 

@@ -57,6 +57,7 @@ class Resource_Booking_Admin {
 
 		$this->Resource_Booking = $Resource_Booking;
 		$this->version = $version;
+		$this->resource_metabox = new Resource_Booking_Res_Mb();
 
 	}
 
@@ -68,7 +69,7 @@ class Resource_Booking_Admin {
 	public function enqueue_styles() {
 
 		wp_enqueue_style( $this->Resource_Booking, plugin_dir_url( __FILE__ ) . 'css/resource-booking-admin.css', array(), $this->version, 'all' );
-		wp_enqueue_style( 'fullcalendar', 'http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/'.self::FULLCALENDAR_VERSION.'/fullcalendar.min.css', array(), FULLCALENDAR_VERSION, 'all' );
+		wp_enqueue_style( 'fullcalendar', 'http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/'.self::FULLCALENDAR_VERSION.'/fullcalendar.min.css', array(), self::FULLCALENDAR_VERSION, 'all' );
 
 	}
 
@@ -80,22 +81,30 @@ class Resource_Booking_Admin {
 	public function enqueue_scripts() {
 
 		wp_enqueue_script( $this->Resource_Booking, plugin_dir_url( __FILE__ ) . 'js/resource-booking-admin.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( 'momentjs', 'http://cdnjs.cloudflare.com/ajax/libs/moment.js/'.self::MOMENT_VERSION.'/moment.min.js', array( 'jquery' ), MOMENT_VERSION, true );
-		wp_enqueue_script( 'fullcalendar', 'http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/'.self::FULLCALENDAR_VERSION.'/fullcalendar.min.js', array( 'jquery', 'momentjs' ), FULLCALENDAR_VERSION, true );
+		wp_enqueue_script( 'momentjs', 'http://cdnjs.cloudflare.com/ajax/libs/moment.js/'.self::MOMENT_VERSION.'/moment.min.js', array( 'jquery' ), self::MOMENT_VERSION, true );
+		wp_enqueue_script( 'fullcalendar', 'http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/'.self::FULLCALENDAR_VERSION.'/fullcalendar.min.js', array( 'jquery', 'momentjs' ), self::FULLCALENDAR_VERSION, true );
 
 	}
 
 	/**
-	 * Create and configure the metaboxes
+	 * Callback to create and configure the metaboxes
 	 *
 	 * @since    0.1.0
 	 */
 	public function rb_add_metaboxes() {
 
-		$res_metabox = new Resource_Booking_Res_Mb();
-
-		$res_metabox->rb_add_res_mb();
+		$this->resource_metabox->rb_add_res_mb();
 
 	}
 
+	/**
+	 * Callback to store Metaboxes values
+	 *
+	 * @since    0.1.0
+	 */
+	public function rb_store_metaboxes($post_id, $post){
+		
+		$this->resource_metabox->rb_store_mb_values($post_id, $post);
+
+	}
 }

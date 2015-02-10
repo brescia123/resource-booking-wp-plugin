@@ -13,7 +13,7 @@
 /**
  * The Resource Metabox definitions class
  *
- * Defines the metabox behaviour and provide all needed methods
+ * Defines the metabox behaviour and provide all needed methods 
  *
  * @package    Resource_Booking
  * @subpackage Resource_Booking/includes
@@ -23,7 +23,7 @@
 class Resource_Booking_Res_Mb {
 
 	/**
-	 * Callback to pass to the hook to create and add the metabox
+	 * Add the Metabox
 	 *
 	 * @since    0.1.0
 	 */

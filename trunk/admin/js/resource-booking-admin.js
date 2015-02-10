@@ -3,9 +3,20 @@
 
     // Document ready
     $(function() {
-        $('#calendar').fullCalendar({
-            // put your options and callbacks here
-        });
+        var calendar = $('#calendar');
+
+        // Calendar configuration
+        calendar
+            .fullCalendar({
+                header: {
+                    left: 'title',
+                    center: 'agendaDay,agendaWeek,month',
+                    right: 'today prev,next'
+                },
+                weekends: false,
+                defaultView: 'agendaWeek',
+                allDaySlot: false,
+            })
     });
 
 })(jQuery);

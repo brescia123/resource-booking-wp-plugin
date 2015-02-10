@@ -27,8 +27,7 @@ class Resource_Booking_Res_Mb {
 	 *
 	 * @since    0.1.0
 	 */
-	public function rb_add_res_mb( )
-	{
+	public function rb_add_res_mb( ) {
 	    add_meta_box( 
 	        'config',
 	        __( 'Configuration' ),
@@ -44,8 +43,7 @@ class Resource_Booking_Res_Mb {
 	 *
 	 * @since    0.1.0
 	 */
- 	public function rb_config_res_mb_callback( ) 
-	{
+ 	public function rb_config_res_mb_callback( ) {
 		wp_nonce_field( 'rb_config_meta_box', 'rb_config_meta_box_nonce' );
 
 
@@ -87,10 +85,7 @@ class Resource_Booking_Res_Mb {
     				echo '</select><br /><span class="description">'.$time_interval_field['desc'].'</span>';
         	echo '</td></tr>';
 		echo '</table>';
-
-
 	}
-
 }
 
 ?>

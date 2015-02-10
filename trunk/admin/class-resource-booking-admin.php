@@ -22,6 +22,12 @@
  */
 class Resource_Booking_Admin {
 
+	/*
+	Constants
+	*/
+	const FULLCALENDAR_VERSION = '2.2.6';
+	const MOMENT_VERSION = '2.9.0';
+
 	/**
 	 * The ID of this plugin.
 	 *
@@ -73,6 +79,8 @@ class Resource_Booking_Admin {
 	public function enqueue_scripts() {
 
 		wp_enqueue_script( $this->Resource_Booking, plugin_dir_url( __FILE__ ) . 'js/resource-booking-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( 'momentjs', 'http://cdnjs.cloudflare.com/ajax/libs/moment.js/'.self::MOMENT_VERSION.'/moment.min.js', array( 'jquery' ), MOMENT_VERSION, true );
+		wp_enqueue_script( 'fullcalendar', 'http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/'.self::FULLCALENDAR_VERSION.'/fullcalendar.min.js', array( 'jquery', 'momentjs' ), FULLCALENDAR_VERSION, true );
 
 	}
 

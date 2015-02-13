@@ -24,29 +24,25 @@ class Resource_Booking_Res_Mb {
 
 	/* Constants */
 	const NONCE_NAME = 'rb_config_meta_box_nonce';
+	const TIME_INTERVAL_MK = 'time_interval';
 
-	/**
-	 * The select field containing the time intervals
-	 *
-	 * @since    0.1.0
-	 * @access   private
-	 * @var      $time_interval_field    The array containing the informations of time intervals select field
-	 */
 	private $time_interval_field;
+	private $selected_time_interval;
 
 	/**
 	 * Add the Metabox
 	 *
 	 * @since    0.1.0
 	 */
-	public function rb_add_res_mb( ) {
+	public function rb_add_res_mb($post) {
 	    add_meta_box( 
 	        'config',
 	        __( 'Configuration' ),
 	        array( $this, 'rb_config_res_mb_callback' ),
 	        'resource',
 	        'normal',
-	        'default'
+	        'default',
+	        array($post)
 	    );
 	}
 
@@ -55,7 +51,7 @@ class Resource_Booking_Res_Mb {
 	 *
 	 * @since    0.1.0
 	 */
- 	public function rb_config_res_mb_callback( ) {
+ 	public function rb_config_res_mb_callback($post) {
 		wp_nonce_field( basename( __FILE__ ), self::NONCE_NAME );
 
 
@@ -78,10 +74,13 @@ class Resource_Booking_Res_Mb {
 					'value' => 120
 					)
 				)
-			);
+		);
 
 		// Get the field
-		// $selected_time_interval = get_post_meta( $post->ID, '_my_meta_value_key', true );
+		$selected_time_interval = get_post_meta( $post->ID, self::TIME_INTERVAL_MK, true );
+		if( !$selected_time_interval ){
+			$selected_time_interval = 30;
+		}
 
 		// Html for the meta_box
 		echo '<table class="form-table">';
@@ -109,7 +108,10 @@ class Resource_Booking_Res_Mb {
 	 *
 	 * @since    0.1.0
 	 */
-	public function rb_store_mb_values($post_id, $post) {
+	public function rb_store_mb_values($post_id) {
+
+		$post = get_post($post_id);
+
 
 		/* Verify the nonce */
 		if(!isset($_POST[self::NONCE_NAME]) || !wp_verify_nonce($_POST[self::NONCE_NAME], basename( __FILE__ ))){
@@ -124,7 +126,20 @@ class Resource_Booking_Res_Mb {
     		return $post_id;
   		}
 
-		add_post_meta( $post_id, 'prova', $post );
+  		/* Get the current meta values */
+  		$time_interval = get_post_meta($post_id, self::TIME_INTERVAL_MK, true);
+  		$new_time_interval = $_POST['time-interval'];
+
+  		/* If the value is changed replace it */
+  		if($new_time_interval && '' == $time_interval){
+
+			add_post_meta( $post_id, self::TIME_INTERVAL_MK, $new_time_interval );
+
+  		} elseif ($new_time_interval && $new_time_interval != $time_interval ){
+
+  			update_post_meta( $post_id, self::TIME_INTERVAL_MK, $new_time_interval );
+
+  		}
 	}
 }
 

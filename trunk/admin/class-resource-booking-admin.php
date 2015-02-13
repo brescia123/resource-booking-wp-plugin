@@ -91,9 +91,9 @@ class Resource_Booking_Admin {
 	 *
 	 * @since    0.1.0
 	 */
-	public function rb_add_metaboxes() {
+	public function rb_add_metaboxes($post) {
 
-		$this->resource_metabox->rb_add_res_mb();
+		$this->resource_metabox->rb_add_res_mb($post);
 
 	}
 
@@ -102,9 +102,9 @@ class Resource_Booking_Admin {
 	 *
 	 * @since    0.1.0
 	 */
-	public function rb_store_metaboxes($post_id, $post){
-		
-		$this->resource_metabox->rb_store_mb_values($post_id, $post);
+	public function rb_store_metaboxes($post_id){
+
+		$this->resource_metabox->rb_store_mb_values($post_id);
 
 	}
 }

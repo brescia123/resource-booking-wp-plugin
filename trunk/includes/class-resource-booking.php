@@ -164,9 +164,12 @@ class Resource_Booking {
 
 		$plugin_admin = new Resource_Booking_Admin( $this->get_resource_booking(), $this->get_version() );
 
+		// Styles and scripts hooks
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		// Resource metabox hook
 		$this->loader->add_action( 'add_meta_boxes_resource', $plugin_admin, 'rb_add_metaboxes' );
+		// Store resource postmeta hook
 		$this->loader->add_action( 'save_post_resource', $plugin_admin, 'rb_store_metaboxes', 10, 2 );
 
 
@@ -183,6 +186,7 @@ class Resource_Booking {
 
 		$plugin_public = new Resource_Booking_Public( $this->get_resource_booking(), $this->get_version() );
 
+		// Styles and scripts hooks
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
@@ -198,6 +202,7 @@ class Resource_Booking {
 
 		$plugin_cpts = new Resource_Booking_Cpts();
 
+		// New resource custom post type registration hook
 		$this->loader->add_action( 'init', $plugin_cpts, 'register_cpts' );
 
 	}

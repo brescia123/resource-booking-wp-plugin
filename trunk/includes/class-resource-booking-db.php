@@ -56,7 +56,7 @@ class Resource_Booking_DB {
 
 
 	/**
-	 * Check if the if the database needs to be updated
+	 * Check if the if the database needs to be updated and in the case it does
 	 *
 	 * @since    0.1.0
 	 */

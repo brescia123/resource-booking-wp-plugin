@@ -121,6 +121,11 @@ class Resource_Booking {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-resource-booking-db.php';
 
 		/**
+		 * The class responsible for defining ajax callbacks
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-resource-booking-ajax.php';
+
+		/**
 		 * The class responsible for defining the metabox for the Resource adimn page
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/metaboxes/class-resource-booking-res-mb.php';

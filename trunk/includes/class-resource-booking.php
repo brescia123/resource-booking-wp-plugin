@@ -172,6 +172,7 @@ class Resource_Booking {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new Resource_Booking_Admin( $this->get_resource_booking(), $this->get_version() );
+		$ajax_callbacks = new Resource_Booking_ajax();
 
 		// Styles and scripts hooks
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
@@ -180,7 +181,8 @@ class Resource_Booking {
 		$this->loader->add_action( 'add_meta_boxes_resource', $plugin_admin, 'rb_add_metaboxes');
 		// Store resource postmeta hook
 		$this->loader->add_action( 'save_post_resource', $plugin_admin, 'rb_store_metaboxes');
-
+		// Ajax hooks
+		$this->loader->add_action( 'wp_ajax_res_reservations_callback', $ajax_callbacks, 'res_reservations_callback');
 
 	}
 

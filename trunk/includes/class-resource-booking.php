@@ -116,6 +116,11 @@ class Resource_Booking {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-resource-booking-cpts.php';
 
 		/**
+		 * The class responsible for managing the database
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-resource-booking-db.php';
+
+		/**
 		 * The class responsible for defining the metabox for the Resource adimn page
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/metaboxes/class-resource-booking-res-mb.php';
@@ -124,7 +129,6 @@ class Resource_Booking {
 		 * The class responsible for defining all actions that occur in the Dashboard.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-resource-booking-admin.php';
-
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
@@ -201,9 +205,11 @@ class Resource_Booking {
 	private function define_plugin_hooks() {
 
 		$plugin_cpts = new Resource_Booking_Cpts();
+		$db_man = new Resource_Booking_DB();
 
 		// New resource custom post type registration hook
 		$this->loader->add_action( 'init', $plugin_cpts, 'register_cpts' );
+		$this->loader->add_action( 'plugins_loaded', $db_man, 'check_version' );
 
 	}
 

@@ -17,11 +17,7 @@ class Resource_Booking_DB {
 	 *
 	 * @since    0.1.0
 	 */
-	public $rb_db_version;
-
-	public function __construct(){
-		$this->rb_db_version = 1;
-	}
+	public $rb_db_version = 1;
 
 	/**
 	 * Creates the database
@@ -32,7 +28,7 @@ class Resource_Booking_DB {
 		global $wpdb;
 
 		// Table name
-		$reservation_table_name = $wpdb->prefix . 'reservations';
+		$reservation_table_name = $wpdb->prefix . 'rb_reservations';
 
 		$charset_collate = $wpdb->get_charset_collate();
 
@@ -56,7 +52,7 @@ class Resource_Booking_DB {
 
 
 	/**
-	 * Check if the if the database needs to be updated and in the case it does
+	 * Check if the if the database needs to be updated
 	 *
 	 * @since    0.1.0
 	 */

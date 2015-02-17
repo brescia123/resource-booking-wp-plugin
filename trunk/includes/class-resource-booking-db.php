@@ -28,13 +28,15 @@ class Resource_Booking_DB {
 	 *
 	 * @since    0.1.0
 	 */
-	public function create() {
+	public function create_tables() {
 		global $wpdb;
 
+		// Table name
 		$reservation_table_name = $wpdb->prefix . 'reservations';
 
 		$charset_collate = $wpdb->get_charset_collate();
 
+		// Sql query
 		$sql = "CREATE TABLE $reservation_table_name (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
 			created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
@@ -48,6 +50,7 @@ class Resource_Booking_DB {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
+		// Update database version
 		update_option( 'rb_db_version', $this->rb_db_version );	
 	}
 
@@ -59,7 +62,7 @@ class Resource_Booking_DB {
 	 */
 	public function check_version() {
 		if( get_option('rb_db_version') != $this->rb_db_version ){
-			$this->create();
+			$this->create_tables();
 		}
 	}
 }

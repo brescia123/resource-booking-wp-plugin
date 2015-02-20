@@ -80,14 +80,16 @@ class Resource_Booking_Admin {
 	 */
 	public function enqueue_scripts($hook) {
 
-		// TODO load the script only on the right pages
-		if ( 'edit-comments.php' == $hook ) {
+		global $post;
+
+		// Load scripts only on new-resource and reosurce edit pages
+		if ( ('post-new.php' == $hook || 'post.php' == $hook ) && $post->post_type === 'resource' ) {
 			wp_enqueue_script( $this->Resource_Booking, plugin_dir_url( __FILE__ ) . 'js/resource-booking-admin.js', array( 'jquery' ), $this->version, false );
 			// in JavaScript, object properties are accessed as ajax_object.*
 			wp_localize_script( $this->Resource_Booking, 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'we_value' => 1234 ) );
+			wp_enqueue_script( 'momentjs', 'http://cdnjs.cloudflare.com/ajax/libs/moment.js/'.self::MOMENT_VERSION.'/moment.min.js', array( 'jquery' ), self::MOMENT_VERSION, true );
+			wp_enqueue_script( 'fullcalendar', 'http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/'.self::FULLCALENDAR_VERSION.'/fullcalendar.min.js', array( 'jquery', 'momentjs' ), self::FULLCALENDAR_VERSION, true );
 		}
-		wp_enqueue_script( 'momentjs', 'http://cdnjs.cloudflare.com/ajax/libs/moment.js/'.self::MOMENT_VERSION.'/moment.min.js', array( 'jquery' ), self::MOMENT_VERSION, true );
-		wp_enqueue_script( 'fullcalendar', 'http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/'.self::FULLCALENDAR_VERSION.'/fullcalendar.min.js', array( 'jquery', 'momentjs' ), self::FULLCALENDAR_VERSION, true );
 	}
 
 	/**

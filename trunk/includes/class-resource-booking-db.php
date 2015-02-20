@@ -57,7 +57,13 @@ class Resource_Booking_DB {
 	 * @since    0.1.0
 	 */
 	public function check_version() {
-		if( get_option('rb_db_version') != $this->rb_db_version ){
+		global $wpdb;
+
+		$reservation_table_name = $wpdb->prefix . 'rb_reservations';
+
+		if( get_option('rb_db_version') != $this->rb_db_version || 
+				$wpdb->get_var("SHOW TABLES LIKE '$reservation_table_name'") != $reservation_table_name){
+
 			$this->create_tables();
 		}
 	}

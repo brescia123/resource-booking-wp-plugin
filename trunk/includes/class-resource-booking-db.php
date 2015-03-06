@@ -24,7 +24,8 @@ class Resource_Booking_DB {
 	 *
 	 * @since    0.1.0
 	 */
-	public function create_tables() {
+	public static function create_tables() {
+
 		global $wpdb;
 
 		// Table name
@@ -47,7 +48,22 @@ class Resource_Booking_DB {
 		dbDelta( $sql );
 
 		// Update database version
-		update_option( 'rb_db_version', $this->rb_db_version );	
+		update_option( 'rb_db_version', $rb_db_version );	
+	}
+
+	/**
+	 * Returns the list of reservations for a given resource
+	 *
+	 * @since    0.1.0
+	 */
+	public static function get_reservations_by_res(	$res_id ) {
+
+		$reservation_table_name = $wpdb->prefix . 'rb_reservations';
+
+		$reservation_rows = $wpdb->get_results(
+
+		);
+
 	}
 
 
@@ -64,7 +80,7 @@ class Resource_Booking_DB {
 		if( get_option('rb_db_version') != $this->rb_db_version || 
 				$wpdb->get_var("SHOW TABLES LIKE '$reservation_table_name'") != $reservation_table_name){
 
-			$this->create_tables();
+			self::create_tables();
 		}
 	}
 }

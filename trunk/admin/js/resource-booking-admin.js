@@ -40,7 +40,7 @@
                 var res = reservations[i];
                 events.push({
                     'id': res.id,
-                    'title': res.id,
+                    'title': res.title,
                     'allDay': false,
                     'start': res.start,
                     'end': res.end,

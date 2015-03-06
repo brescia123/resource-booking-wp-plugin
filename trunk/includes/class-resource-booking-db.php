@@ -17,7 +17,7 @@ class Resource_Booking_DB {
 	 *
 	 * @since    0.1.0
 	 */
-	public static $rb_db_version = 1;
+	public static $rb_db_version = 2;
 
 	/**
 	 * Creates the database
@@ -38,6 +38,7 @@ class Resource_Booking_DB {
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
 			created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 			resource_id mediumint(9) NOT NULL,
+			title text DEFAULT 'Not specified' NOT NULL,
 			start datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 			end datetime DEFAULT '0000-00-00 00:00:00' NOT NULL, 
 			UNIQUE KEY id (id)

@@ -30,8 +30,9 @@ class Resource_Booking_Activator {
 	 * @since    0.1.0
 	 */
 	public static function activate() {
+		// At plugin activation creates the database
 		$db_man = new Resource_Booking_DB();
-		$db_man->create();
+		$db_man->check_version();
 	}
 
 }

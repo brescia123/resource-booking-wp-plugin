@@ -17,7 +17,7 @@ class Resource_Booking_DB {
 	 *
 	 * @since    0.1.0
 	 */
-	public $rb_db_version = 1;
+	public static $rb_db_version = 1;
 
 	/**
 	 * Creates the database
@@ -48,22 +48,28 @@ class Resource_Booking_DB {
 		dbDelta( $sql );
 
 		// Update database version
-		update_option( 'rb_db_version', $rb_db_version );	
+		update_option( 'rb_db_version', self::$rb_db_version );	
 	}
 
+
 	/**
-	 * Returns the list of reservations for a given resource
+	 * Returns the list of reservations for a given resource in a given interval
 	 *
 	 * @since    0.1.0
 	 */
-	public static function get_reservations_by_res(	$res_id ) {
+	public function get_reservations_by_res( $res_id, $start_date, $end_date ) {
+
+		global $wpdb;
 
 		$reservation_table_name = $wpdb->prefix . 'rb_reservations';
 
-		$reservation_rows = $wpdb->get_results(
-
+		$reservation_rows = $wpdb->get_results( 'SELECT * from '.$reservation_table_name
+												.' WHERE start > '.$start_date
+												.' AND start < '.$end_date
+												.";"
 		);
 
+		return $reservation_rows;
 	}
 
 
@@ -77,7 +83,9 @@ class Resource_Booking_DB {
 
 		$reservation_table_name = $wpdb->prefix . 'rb_reservations';
 
-		if( get_option('rb_db_version') != $this->rb_db_version || 
+		var_dump($wpdb->get_var("SHOW TABLES LIKE '$reservation_table_name'"));
+
+		if( get_option('rb_db_version') != self::$rb_db_version || 
 				$wpdb->get_var("SHOW TABLES LIKE '$reservation_table_name'") != $reservation_table_name){
 
 			self::create_tables();

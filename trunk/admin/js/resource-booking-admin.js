@@ -4,7 +4,8 @@
     // Document ready
     $(function() {
         var calendar = $('#calendar');
-        var post_id = $("#post_ID").val();
+        var post_id = $('#post_ID').val();
+        var time_interval = '00:' + $('#time-interval').find('option:selected').val() + ':00';
 
         // Calendar configuration
         calendar
@@ -17,6 +18,8 @@
                 weekends: false,
                 defaultView: 'agendaWeek',
                 allDaySlot: false,
+                editable: true,
+                slotDuration: time_interval,
                 events: function(start, end, timezone, callback) {
                     var data = {
                         'action': 'res_reservations_callback',

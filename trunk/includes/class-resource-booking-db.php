@@ -62,12 +62,12 @@ class Resource_Booking_DB {
 		global $wpdb;
 
 		$reservation_table_name = $wpdb->prefix . 'rb_reservations';
-
-		$reservation_rows = $wpdb->get_results( 'SELECT * from '.$reservation_table_name
-												.' WHERE start > '.$start_date
-												.' AND start < '.$end_date
-												.";"
-		);
+		$query = 'SELECT * from '.$reservation_table_name
+				.' WHERE resource_id = '.$res_id
+				.' AND start > "'.$start_date.'"'
+				.' AND start < "'.$end_date.'"'
+				.';';
+		$reservation_rows = $wpdb->get_results( $query );
 
 		return $reservation_rows;
 	}
@@ -82,8 +82,6 @@ class Resource_Booking_DB {
 		global $wpdb;
 
 		$reservation_table_name = $wpdb->prefix . 'rb_reservations';
-
-		var_dump($wpdb->get_var("SHOW TABLES LIKE '$reservation_table_name'"));
 
 		if( get_option('rb_db_version') != self::$rb_db_version || 
 				$wpdb->get_var("SHOW TABLES LIKE '$reservation_table_name'") != $reservation_table_name){

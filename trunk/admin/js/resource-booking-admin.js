@@ -4,6 +4,7 @@
     // Document ready
     $(function() {
         var calendar = $('#calendar');
+        var post_id = $("#post_ID").val();
 
         // Calendar configuration
         calendar
@@ -16,16 +17,37 @@
                 weekends: false,
                 defaultView: 'agendaWeek',
                 allDaySlot: false,
+                events: function(start, end, timezone, callback) {
+                    var data = {
+                        'action': 'res_reservations_callback',
+                        'res_id': post_id,
+                        'start_date': start.format(),
+                        'end_date': end.format(),
+                    };
+                    jQuery.post(ajax_object.ajax_url, data, function(response) {
+                        var reservations = JSON.parse(response);
+                        var events = resToEventsArray(reservations)
+                        console.log(events);
+                        callback(events);
+                    });
+                }
             });
 
-        var data = {
-            'action': 'res_reservations_callback',
-            'whatever': ajax_object.we_value // We pass php values differently!
-        };
-        // We can also pass the url value separately from ajaxurl for front end AJAX implementations
-        jQuery.post(ajax_object.ajax_url, data, function(response) {
-            alert('Got this from the server: ' + response);
-        });
+        var resToEventsArray = function(reservations) {
+            var events = [];
+
+            for (var i = 0; i < reservations.length; i++) {
+                var res = reservations[i];
+                events.push({
+                    'id': res.id,
+                    'title': res.id,
+                    'allDay': false,
+                    'start': res.start,
+                    'end': res.end,
+                });
+            }
+            return events;
+        }
     });
 
 })(jQuery);

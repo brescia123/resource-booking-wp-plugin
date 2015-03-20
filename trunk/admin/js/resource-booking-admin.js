@@ -18,47 +18,72 @@
             weekends: false,
             defaultView: 'agendaWeek',
             allDaySlot: false,
+            selectable: true,
+            selectOverlap: false,
             editable: true,
             slotDuration: time_interval,
-            events: function(start, end, timezone, callback) {
-                var data = {
-                    'action': 'res_reservations_callback',
-                    'res_id': post_id,
-                    'start_date': start.format(),
-                    'end_date': end.format(),
+            eventSources: [{
+                // Get events from the db
+                events: function(start, end, timezone, callback) {
+                    var data = {
+                        'action': 'res_reservations_callback',
+                        'res_id': post_id,
+                        'start_date': start.format(),
+                        'end_date': end.format(),
+                    }
+                    jQuery.post(ajax_object.ajax_url, data, function(response) {
+                        var reservations = JSON.parse(response);
+                        var events = resToEventsArray(reservations)
+                        callback(events);
+                    });
                 }
-                jQuery.post(ajax_object.ajax_url, data, function(response) {
-                    var reservations = JSON.parse(response);
-                    var events = resToEventsArray(reservations)
-                    console.log(events);
-                    callback(events);
-                });
+            }],
+            // Add a client-side event to be stored later on the server
+            select: function(start, end, jsEvent, view) {
+                var title = prompt('Event Title:');
+                if (title) {
+                    event = {
+                        'title': title,
+                        'start': start,
+                        'allDay': false,
+                        'end': end
+                    }
+                    calendar.fullCalendar('renderEvent', event, true);
+                }
             }
         };
         calendar.fullCalendar(calendarOpts);
 
-        time_interval_select.change(function () {
+        // Reacts to new time interval selection
+        time_interval_select.change(function() {
             var minutesTot = $(this).val();
             var hours = parseInt(minutesTot / 60);
             var minutesRel = minutesTot % 60;
+
             calendarOpts.slotDuration = '00:' + minutesTot + ':00';
             calendar.fullCalendar('destroy');
             calendar.fullCalendar(calendarOpts);
+        });
+
+        $('#publish').click(function() {
+            setTimeout(function() {
+                console.log('update!');
+            }, 2000);
         })
 
-        var resToEventsArray = function(reservations) {
-            var events = [];
+        /* Helper Methods */
 
-            for (var i = 0; i < reservations.length; i++) {
-                var res = reservations[i];
-                events.push({
+        // Used to convert reservations objects retrieved from the server in FullCalendar events
+        var resToEventsArray = function(reservations) {
+            var events = $.map(reservations, function(res) {
+                return {
                     'id': res.id,
                     'title': res.title,
                     'allDay': false,
                     'start': res.start,
-                    'end': res.end,
-                });
-            }
+                    'end': res.end
+                }
+            });
             return events;
         }
     });

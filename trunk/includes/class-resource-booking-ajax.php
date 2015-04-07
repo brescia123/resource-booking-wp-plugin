@@ -58,15 +58,21 @@ class Resource_Booking_ajax {
 		$start_datetime = $_POST['start_datetime'];
 		$end_datetime = $_POST['end_datetime'];
 
-		$new_reservation = $this->rb_db->save_reservation( $res_id, $title, $start_datetime, $end_datetime );
-			
 		$response = new stdClass();
 
-		if ( $new_reservation ) {
-			$response->success = TRUE;
-			$response->reservation = $this->reservation_to_obj_repr( $new_reservation );
+		if( $this->rb_db->validate_reservation( $res_id, $start_datetime, $end_datetime ) ){
+			// Store the reservation
+			$new_reservation = $this->rb_db->save_reservation( $res_id, $title, $start_datetime, $end_datetime );
+			
+			if ( $new_reservation ) {
+				$response->success = TRUE;
+				$response->reservation = $this->reservation_to_obj_repr( $new_reservation );
+			} else {
+				$response->success = FALSE;
+			}
+
 		} else {
-			$response->success = FALSE;
+				$response->success = FALSE;
 		}
 
 		echo json_encode($response);

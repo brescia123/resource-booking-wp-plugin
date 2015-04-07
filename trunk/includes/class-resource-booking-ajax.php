@@ -35,7 +35,7 @@ class Resource_Booking_ajax {
 
 		$response = new stdClass();
 
-		if ( $reservations != FALSE ) {
+		if ( !is_null( $reservations ) ) {
 			$response->success = TRUE;
 			$response->reservations = $reservations;
 		} else {

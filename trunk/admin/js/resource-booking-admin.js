@@ -28,27 +28,41 @@
                     var data = {
                         'action': 'res_reservations_callback',
                         'res_id': post_id,
-                        'start_date': start.format(),
-                        'end_date': end.format(),
+                        'start_datetime': start.format(),
+                        'end_datetime': end.format(),
                     }
-                    jQuery.post(ajax_object.ajax_url, data, function(response) {
-                        var reservations = JSON.parse(response);
-                        var events = resToEventsArray(reservations)
-                        callback(events);
+                    jQuery.post(ajax_object.ajax_url, data, function(response_json) {
+                        var response = JSON.parse(response_json);
+                        if (response.success) {
+                            var events = $.map(response.reservations, resToEvent);
+                            callback(events);
+                        } else {
+                            alert("error");
+                        }
                     });
                 }
             }],
-            // Add a client-side event to be stored later on the server
             select: function(start, end, jsEvent, view) {
-                var title = prompt('Event Title:');
+                var title = prompt('Name:');
                 if (title) {
-                    event = {
-                        'title': title,
-                        'start': start,
-                        'allDay': false,
-                        'end': end
-                    }
-                    calendar.fullCalendar('renderEvent', event, true);
+                    var data = {
+                            'action': 'res_save_reservation_callback',
+                            'res_id': post_id,
+                            'title': title,
+                            'start_datetime': start.format(),
+                            'end_datetime': end.format()
+                        }
+                        // Post the new event to the server
+                    jQuery.post(ajax_object.ajax_url, data, function(response_json) {
+                        var response = JSON.parse(response_json);
+
+                        if (response.success) {
+                            var event = resToEvent(response.reservation);
+                            calendar.fullCalendar('renderEvent', event, true);
+                        } else {
+                            alert("error");
+                        }
+                    });
                 }
             }
         };
@@ -65,26 +79,27 @@
             calendar.fullCalendar(calendarOpts);
         });
 
-        $('#publish').click(function() {
-            setTimeout(function() {
-                console.log('update!');
-            }, 2000);
-        })
-
         /* Helper Methods */
 
-        // Used to convert reservations objects retrieved from the server in FullCalendar events
-        var resToEventsArray = function(reservations) {
-            var events = $.map(reservations, function(res) {
-                return {
-                    'id': res.id,
-                    'title': res.title,
-                    'allDay': false,
-                    'start': res.start,
-                    'end': res.end
-                }
-            });
-            return events;
+        // Converts a reservation object retrieved from the server in FullCalendar event
+        var resToEvent = function(reservation) {
+            return {
+                'id': reservation.resource_id,
+                'title': reservation.title,
+                'start': reservation.start_datetime,
+                'end': reservation.end_datetime,
+                'allDay': false
+            }
+        }
+
+        // Converts an envent to a reservation object
+        var eventToRes = function(event) {
+            return {
+                'id': post_id,
+                'title': event.title,
+                'start': event.start.toString(),
+                'end': event.end.toString()
+            }
         }
     });
 

@@ -178,11 +178,12 @@ class Resource_Booking {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		// Resource metabox hook
-		$this->loader->add_action( 'add_meta_boxes_resource', $plugin_admin, 'rb_add_metaboxes');
+		$this->loader->add_action( 'add_meta_boxes_resource', $plugin_admin, 'rb_add_metaboxes' );
 		// Store resource postmeta hook
-		$this->loader->add_action( 'save_post_resource', $plugin_admin, 'rb_store_metaboxes');
+		$this->loader->add_action( 'save_post_resource', $plugin_admin, 'rb_store_metaboxes' );
 		// Ajax hooks (wp_ajax_(action_name))
-		$this->loader->add_action( 'wp_ajax_res_reservations_callback', $ajax_callbacks, 'res_reservations_callback');
+		$this->loader->add_action( 'wp_ajax_res_reservations_callback', $ajax_callbacks, 'res_reservations_callback' );
+		$this->loader->add_action( 'wp_ajax_res_save_reservation_callback', $ajax_callbacks, 'res_save_reservation_callback' );
 
 	}
 

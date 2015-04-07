@@ -28,16 +28,16 @@ class Resource_Booking_ajax {
 	public function res_reservations_callback() {
 
 		$res_id = $_POST['res_id'];
-		$start_datetime = $_POST['start_datetime'];
-		$end_datetime = $_POST['end_datetime'];
+		$start = $_POST['start'];
+		$end = $_POST['end'];
 
-		$reservations = $this->rb_db->get_reservations_by_res_interval( $res_id, $start_datetime, $end_datetime);
+		$reservations = $this->rb_db->get_reservations_by_res_interval( $res_id, $start, $end);
 
 		$response = new stdClass();
 
-		if ( $reservations ) {
+		if ( $reservations != FALSE ) {
 			$response->success = TRUE;
-			$response->reservations = array_map( array( $this, 'reservation_to_obj_repr' ), $reservations );
+			$response->reservations = $reservations;
 		} else {
 			$response->success = FALSE;
 		}
@@ -55,18 +55,18 @@ class Resource_Booking_ajax {
 
 		$res_id = $_POST['res_id'];
 		$title = $_POST['title'];
-		$start_datetime = $_POST['start_datetime'];
-		$end_datetime = $_POST['end_datetime'];
+		$start = $_POST['start'];
+		$end = $_POST['end'];
 
 		$response = new stdClass();
 
-		if( $this->rb_db->validate_reservation( $res_id, $start_datetime, $end_datetime ) ){
+		if( $this->rb_db->validate_reservation( $res_id, $start, $end ) ){
 			// Store the reservation
-			$new_reservation = $this->rb_db->save_reservation( $res_id, $title, $start_datetime, $end_datetime );
+			$new_reservation = $this->rb_db->save_reservation( $res_id, $title, $start, $end );
 			
 			if ( $new_reservation ) {
 				$response->success = TRUE;
-				$response->reservation = $this->reservation_to_obj_repr( $new_reservation );
+				$response->reservation = $new_reservation;
 			} else {
 				$response->success = FALSE;
 			}
@@ -78,22 +78,5 @@ class Resource_Booking_ajax {
 		echo json_encode($response);
 
 		wp_die(); // this is required to terminate immediately and return a proper response
-	}
-
-	/**
-	 * Helper function that converts a resource object retrieved from the DB to the representation required by
-	 * the front-end. Needs to be enconded in JSON.
-	 *
-	 * @since    0.1.0
-	 */
-	private function reservation_to_obj_repr( $reservation ) {
-		$reservation_obj = new stdClass();
-
-		$reservation_obj->resource_id = $reservation->resource_id;
-		$reservation_obj->title = $reservation->title;
-		$reservation_obj->start_datetime = $reservation->start;
-		$reservation_obj->end_datetime = $reservation->end;
-
-		return $reservation_obj;
 	}
 }

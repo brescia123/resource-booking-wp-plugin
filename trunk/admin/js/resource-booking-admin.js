@@ -20,6 +20,7 @@
             allDaySlot: false,
             selectable: true,
             selectOverlap: false,
+            eventOverlap: false,
             editable: true,
             slotDuration: time_interval,
             eventSources: [{
@@ -28,8 +29,8 @@
                     var data = {
                         'action': 'res_reservations_callback',
                         'res_id': post_id,
-                        'start_datetime': start.format(),
-                        'end_datetime': end.format(),
+                        'start': start.format(),
+                        'end': end.format(),
                     }
                     jQuery.post(ajax_object.ajax_url, data, function(response_json) {
                         var response = JSON.parse(response_json);
@@ -37,7 +38,7 @@
                             var events = $.map(response.reservations, resToEvent);
                             callback(events);
                         } else {
-                            alert("error");
+                            alert("Error: \n" + response_json);
                         }
                     });
                 }
@@ -49,10 +50,10 @@
                             'action': 'res_save_reservation_callback',
                             'res_id': post_id,
                             'title': title,
-                            'start_datetime': start.format(),
-                            'end_datetime': end.format()
+                            'start': start.format(),
+                            'end': end.format()
                         }
-                        // Post the new event to the server
+                    // Post the new event to the server
                     jQuery.post(ajax_object.ajax_url, data, function(response_json) {
                         var response = JSON.parse(response_json);
 
@@ -60,7 +61,7 @@
                             var event = resToEvent(response.reservation);
                             calendar.fullCalendar('renderEvent', event, true);
                         } else {
-                            alert("error");
+                            alert("Error: \n" + response_json);
                         }
                     });
                 }
@@ -84,10 +85,10 @@
         // Converts a reservation object retrieved from the server in FullCalendar event
         var resToEvent = function(reservation) {
             return {
-                'id': reservation.resource_id,
+                'id': reservation.id,
                 'title': reservation.title,
-                'start': reservation.start_datetime,
-                'end': reservation.end_datetime,
+                'start': reservation.start,
+                'end': reservation.end,
                 'allDay': false
             }
         }

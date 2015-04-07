@@ -63,7 +63,7 @@ class Resource_Booking_DB
         global $wpdb;
         
         $reservation_table_name = $wpdb->prefix . 'rb_reservations';
-        $query = 'SELECT * from ' . $reservation_table_name . ' WHERE resource_id = ' . $res_id . ' AND start > "' . $start_date . '"' . ' AND start < "' . $end_date . '"' . ';';
+        $query = 'SELECT * from ' . $reservation_table_name . ' WHERE resource_id = ' . $res_id . ' AND start >= "' . $start_date . '"' . ' AND start < "' . $end_date . '"' . ';';
         $reservation_rows = $wpdb->get_results( $query );
         
         return $reservation_rows;

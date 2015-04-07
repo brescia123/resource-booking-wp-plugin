@@ -58,7 +58,7 @@ class Resource_Booking_DB {
 	 *
 	 * @since    0.1.0
 	 */
-	public function get_reservations_by_res( $res_id, $start_date, $end_date ) {
+	public function get_reservations_by_res_interval( $res_id, $start_date, $end_date ) {
 
 		global $wpdb;
 

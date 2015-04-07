@@ -31,7 +31,7 @@ class Resource_Booking_ajax {
 		$start_date = $_POST['start_date'];
 		$end_date = $_POST['end_date'];
 
-		$resevations = $this->rb_db->get_reservations_by_res($res_id, $start_date, $end_date);
+		$resevations = $this->rb_db->get_reservations_by_res_interval($res_id, $start_date, $end_date);
 
 		echo json_encode($resevations);
 

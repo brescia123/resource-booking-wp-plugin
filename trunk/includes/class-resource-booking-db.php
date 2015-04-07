@@ -73,6 +73,37 @@ class Resource_Booking_DB {
 		return $reservation_rows;
 	}
 
+	/**
+	 * Store a reservation in the db and return the added row 
+	 *
+	 * @since    0.1.0
+	 */
+	public function save_reservation( $res_id, $title, $start_date, $end_date ) {
+
+		global $wpdb;
+
+		$reservation_table_name = $wpdb->prefix . 'rb_reservations';
+		$data = array(
+			'created' => current_time('mysql'),
+			'resource_id' => $res_id,
+			'start' => $start_date,
+			'end' => $end_date,
+			'title' => $title
+		 );
+
+		$result = $wpdb->insert( $reservation_table_name, $data );
+		$new_res_id = $wpdb->insert_id;
+
+		if( ! $result ) {
+			return false;
+		} else {
+			$reservation = $wpdb->get_row( 'SELECT * from '.$reservation_table_name.' WHERE id = '.$new_res_id );
+			return $reservation;
+		}
+	}
+
+
+
 
 	/**
 	 * Check if the if the database needs to be updated

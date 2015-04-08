@@ -99,6 +99,7 @@ class Resource_Booking_Res_Mb {
 		echo '</table>';
 
         // Calendar
+		echo '<h4><span id="important">IMPORTANT! </span>Any changes you make on the calendar will be saved even without pressing the button "Update".</h4>';
 		echo '<div id="calendar"></div>';
 
 	}

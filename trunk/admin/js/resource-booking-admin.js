@@ -6,7 +6,9 @@
         var calendar = $('#calendar');
         var post_id = $('#post_ID').val();
         var time_interval_select = $('#time-interval');
+        var res_color_select = $('#res-color');
         var time_interval = '00:' + time_interval_select.find('option:selected').val() + ':00';
+        var res_color = res_color_select.find('option:selected').val();
 
         // Calendar configuration
         var calendarOpts = {
@@ -18,6 +20,7 @@
             weekends: false,
             defaultView: 'agendaWeek',
             allDaySlot: false,
+            eventColor: res_color,
             selectable: true,
             selectOverlap: false,
             eventOverlap: false,
@@ -116,6 +119,15 @@
             var minutesRel = minutesTot % 60;
 
             calendarOpts.slotDuration = '00:' + minutesTot + ':00';
+            calendar.fullCalendar('destroy');
+            calendar.fullCalendar(calendarOpts);
+        });
+
+        // Reacts to new resource color selection
+        res_color_select.change(function() {
+            var newColor = $(this).val();
+
+            calendarOpts.eventColor = newColor;
             calendar.fullCalendar('destroy');
             calendar.fullCalendar(calendarOpts);
         });

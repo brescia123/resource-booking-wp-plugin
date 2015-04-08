@@ -25,49 +25,89 @@
             slotDuration: time_interval,
             eventSources: [{
                 // Get events from the db
-                events: function(start, end, timezone, callback) {
-                    var data = {
-                        'action': 'res_reservations_callback',
-                        'res_id': post_id,
-                        'start': start.format(),
-                        'end': end.format(),
-                    }
-                    jQuery.post(ajax_object.ajax_url, data, function(response_json) {
-                        var response = JSON.parse(response_json);
-                        if (response.success) {
-                            var events = $.map(response.reservations, resToEvent);
-                            callback(events);
-                        } else {
-                            alert("Error: \n" + response_json);
-                        }
-                    });
-                }
+                events: getEvents
             }],
-            select: function(start, end, jsEvent, view) {
-                var title = prompt('Name:');
-                if (title) {
-                    var data = {
-                            'action': 'res_save_reservation_callback',
-                            'res_id': post_id,
-                            'title': title,
-                            'start': start.format(),
-                            'end': end.format()
-                        }
-                    // Post the new event to the server
-                    jQuery.post(ajax_object.ajax_url, data, function(response_json) {
-                        var response = JSON.parse(response_json);
-
-                        if (response.success) {
-                            var event = resToEvent(response.reservation);
-                            calendar.fullCalendar('renderEvent', event, true);
-                        } else {
-                            alert("Error: \n" + response_json);
-                        }
-                    });
-                }
-            }
+            select: newEvent,
+            eventResize: updateEvent,
+            eventDrop: updateEvent,
+            eventClick: promptForNewTitle
         };
         calendar.fullCalendar(calendarOpts);
+
+        // Makes a POST request to the server for a new reservation
+        function newEvent(start, end, jsEvent, view) {
+            var title = prompt('Name:');
+            if (title) {
+                var data = {
+                        'action': 'res_save_reservation_callback',
+                        'res_id': post_id,
+                        'title': title,
+                        'start': start.format(),
+                        'end': end.format()
+                    }
+                    // Post the new event to the server
+                jQuery.post(ajax_object.ajax_url, data, function(response_json) {
+                    var response = JSON.parse(response_json);
+
+                    if (response.success) {
+                        var event = resToEvent(response.reservation);
+                        calendar.fullCalendar('renderEvent', event, true);
+                    } else {
+                        alert('Error: \n' + response_json);
+                    }
+                });
+            }
+        }
+
+        // Makes a POST request to the server to get all the events in a given time interval
+        function getEvents(start, end, timezone, callback) {
+            var data = {
+                'action': 'res_reservations_callback',
+                'res_id': post_id,
+                'start': start.format(),
+                'end': end.format(),
+            }
+            jQuery.post(ajax_object.ajax_url, data, function(response_json) {
+                var response = JSON.parse(response_json);
+                if (response.success) {
+                    var events = $.map(response.reservations, resToEvent);
+                    callback(events);
+                } else {
+                    alert('Error: \n' + response_json);
+                }
+            });
+        }
+
+        // Makes a POST request to the server to update a reservation
+        function updateEvent(event, delta, revertFunc) {
+            var data = {
+                'action': 'res_update_reservation_callback',
+                'id': event.id,
+                'res_id': post_id,
+                'title': event.title,
+                'start': event.start.format(),
+                'end': event.end.format()
+            }
+            jQuery.post(ajax_object.ajax_url, data, function(response_json) {
+                var response = JSON.parse(response_json);
+
+                if (response.success) {
+                    //var event = resToEvent(response.reservation);
+                    calendar.fullCalendar('updateEvent', event);
+                } else {
+                    alert('Error: \n' + response_json);
+                    revertFunc()
+                }
+            });
+        }
+
+        function promptForNewTitle(calEvent, jsEvent, view) {
+            var newTitle = prompt('New name:');
+            if (newTitle) {
+                calEvent.title = newTitle
+                updateEvent(calEvent);
+            }
+        }
 
         // Reacts to new time interval selection
         time_interval_select.change(function() {

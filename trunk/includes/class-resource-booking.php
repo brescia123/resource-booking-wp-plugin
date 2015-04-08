@@ -184,7 +184,8 @@ class Resource_Booking {
 		// Ajax hooks (wp_ajax_(action_name))
 		$this->loader->add_action( 'wp_ajax_res_reservations_callback', $ajax_callbacks, 'res_reservations_callback' );
 		$this->loader->add_action( 'wp_ajax_res_save_reservation_callback', $ajax_callbacks, 'res_save_reservation_callback' );
-
+		$this->loader->add_action( 'wp_ajax_res_update_reservation_callback', $ajax_callbacks, 'res_update_reservation_callback' );
+		$this->loader->add_action( 'wp_ajax_res_delete_reservation_callback', $ajax_callbacks, 'res_delete_reservation_callback' );
 	}
 
 	/**

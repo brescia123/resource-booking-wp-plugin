@@ -73,9 +73,65 @@ class Resource_Booking_ajax {
 
 		} else {
 				$response->success = FALSE;
+				$response->msg = 'Resource not valid';
 		}
 
 		echo json_encode($response);
+
+		wp_die(); // this is required to terminate immediately and return a proper response
+	}
+
+	/**
+	 * Ajax callback that update a reservation for a resource and return it
+	 *
+	 * @since    0.1.0
+	 */
+	public function res_update_reservation_callback() {
+
+		$id = $_POST['id'];
+		$res_id = $_POST['res_id'];
+		$title = $_POST['title'];
+		$start = $_POST['start'];
+		$end = $_POST['end'];
+
+		$response = new stdClass();
+
+		if( $this->rb_db->validate_reservation( $res_id, $start, $end, $id ) ){
+			// Store the reservation
+			$updated_reservation = $this->rb_db->update_reservation( $id, $title, $start, $end );
+			
+			if ( $updated_reservation ) {
+				$response->success = TRUE;
+				$response->reservation = $updated_reservation;
+			} else {
+				$response->success = FALSE;
+			}
+
+		} else {
+				$response->success = FALSE;
+				$response->msg = 'Resource not valid';
+		}
+
+		echo json_encode( $response );
+
+		wp_die(); // this is required to terminate immediately and return a proper response
+	}
+
+	/**
+	 * Ajax callback that delete a reservation
+	 *
+	 * @since    0.1.0
+	 */
+	public function res_delete_reservation_callback() {
+
+		$id = $_POST['id'];
+
+		$response = new stdClass();
+
+		// Store the reservation
+		$response->success = $this->rb_db->delete_reservation( $id );
+		
+		echo json_encode( $response );
 
 		wp_die(); // this is required to terminate immediately and return a proper response
 	}

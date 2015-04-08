@@ -25,9 +25,12 @@ class Resource_Booking_Res_Mb {
 	/* Constants */
 	const NONCE_NAME = 'rb_config_meta_box_nonce';
 	const TIME_INTERVAL_MK = 'time_interval';
+	const RES_COLOR_MK = 'res_color';
 
 	private $time_interval_field;
+	private $res_color_field;
 	private $selected_time_interval;
+	private $selected_res_color;
 
 	/**
 	 * Add the Metabox
@@ -76,15 +79,41 @@ class Resource_Booking_Res_Mb {
 				)
 		);
 
-		// Get the field
+		// The values array represents the possible colors
+		$res_color_field = array(
+			'label' 	=> 'Resource Color', 
+			'desc' 		=> 'The color representing the resource on calendar', 
+			'id' 		=> 'res-color',
+			'values' 	=> array(
+				0 => array( 'label' => 'Green', 'value' => '#7bd148' ), 
+				1 => array( 'label' => 'Bold blue', 'value' => '#5484ed' ), 
+				2 => array( 'label' => 'Blue', 'value' => '#a4bdfc' ), 
+				3 => array( 'label' => 'Turquoise', 'value' => '#46d6db' ), 
+				4 => array( 'label' => 'Light', 'value' => '#7ae7bf' ), 
+				5 => array( 'label' => 'Bold green', 'value' => '#51b749' ), 
+				6 => array( 'label' => 'Yellow', 'value' => '#fbd75b' ), 
+				7 => array( 'label' => 'Orange', 'value' => '#ffb878' ), 
+				8 => array( 'label' => 'Red', 'value' => '#ff887c' ), 
+				9 => array( 'label' => 'Bold red', 'value' => '#dc2127' ), 
+				10 => array( 'label' => 'Purple', 'value' => '#dbadff' ), 
+				11 => array( 'label' => 'Gray', 'value' => '#e1e1e1' ), 
+				)
+		);
+
+		// Get the time-interval value
 		$selected_time_interval = get_post_meta( $post->ID, self::TIME_INTERVAL_MK, true );
 		if( !$selected_time_interval ){
 			$selected_time_interval = 30;
 		}
 
-		// Html for the meta_box
-		echo '<table class="form-table">';
+		// Get the color value
+		$selected_res_color = get_post_meta( $post->ID, self::RES_COLOR_MK, true );
+		if( !$selected_res_color ){
+			$selected_res_color = '#7bd148';
+		}
 
+		// Html for the time-interval meta_box
+		echo '<table class="form-table">';
 			// Time Interval
 			echo '<tr>
                 <th><label for="'.$time_interval_field['id'].'">'.$time_interval_field['label'].'</label></th>
@@ -95,7 +124,20 @@ class Resource_Booking_Res_Mb {
     				}
     				echo '</select><br /><span class="description">'.$time_interval_field['desc'].'</span>';
         	echo '</td></tr>';
+		echo '</table>';
 
+		// Html for the res-color meta_box
+		echo '<table class="form-table">';
+			// Color Resource
+			echo '<tr>
+                <th><label for="'.$res_color_field['id'].'">'.$res_color_field['label'].'</label></th>
+                <td>';
+                   	echo '<select name="'.$res_color_field['id'].'" id="'.$res_color_field['id'].'">';
+   					foreach ($res_color_field['values'] as $option) {
+    					echo '<option', $selected_res_color == $option['value'] ? ' selected="selected"' : '', ' value="'.$option['value'].'" style="color:'.$option['value'].'">'.$option['label'].'</option>';
+    				}
+    				echo '</select><br /><span class="description">'.$res_color_field['desc'].'</span>';
+        	echo '</td></tr>';
 		echo '</table>';
 
         // Calendar
@@ -129,17 +171,20 @@ class Resource_Booking_Res_Mb {
 
   		/* Get the current meta values */
   		$time_interval = get_post_meta($post_id, self::TIME_INTERVAL_MK, true);
+  		$res_color = get_post_meta($post_id, self::RES_COLOR_MK, true);
   		$new_time_interval = $_POST['time-interval'];
+  		$new_res_color = $_POST['res-color'];
 
   		/* If the value is changed replace it */
   		if($new_time_interval && '' == $time_interval){
-
 			add_post_meta( $post_id, self::TIME_INTERVAL_MK, $new_time_interval );
-
   		} elseif ($new_time_interval && $new_time_interval != $time_interval ){
-
   			update_post_meta( $post_id, self::TIME_INTERVAL_MK, $new_time_interval );
-
+  		}  		
+  		if($new_res_color && '' == $res_color){
+			add_post_meta( $post_id, self::RES_COLOR_MK, $new_res_color );
+  		} elseif ($new_res_color && $new_res_color != $res_color ){
+  			update_post_meta( $post_id, self::RES_COLOR_MK, $new_res_color );
   		}
 	}
 }

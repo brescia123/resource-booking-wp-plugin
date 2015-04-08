@@ -100,12 +100,64 @@ class Resource_Booking_DB
     }
     
     /**
-     * Validates the reservation. It checks for correct resource id and valid dates and return if th
-     * the reservation is valid or not.
+     * Update a reservation in the db and return the updated row
      *
      * @since    0.1.0
      */
-    public function validate_reservation( $res_id, $start_date, $end_date ) {
+    public function update_reservation( $id, $new_title, $new_start_date, $new_end_date ) {
+        
+        global $wpdb;
+        
+        $reservation_table_name = $wpdb->prefix . 'rb_reservations';
+        $data = array(
+            'start' => $new_start_date,
+            'end' => $new_end_date,
+            'title' => $new_title
+        );
+        $where = array(
+            'id' => $id
+        );
+        
+        $result = $wpdb->update( $reservation_table_name, $data, $where );
+        
+        if( !$result ) {
+            return FALSE;
+        } 
+        else {
+            $reservation = $wpdb->get_row( 'SELECT * from ' . $reservation_table_name . ' WHERE id = ' . $id );
+            return $reservation;
+        }
+    }
+    
+    /**
+     * Delete a reservation in the db
+     *
+     * @since    0.1.0
+     */
+    public function delete_reservation( $id ) {
+        
+        global $wpdb;
+        
+        $reservation_table_name = $wpdb->prefix . 'rb_reservations';
+        $where = array(
+            'id' => $id
+        );
+        
+        return $wpdb->delete( $reservation_table_name, $where );
+    }
+    
+    /**
+     * Validates the reservation. It checks for correct resource id and valid dates and return if
+     * the reservation is valid or not.
+     *
+     * @since    0.1.0
+     *
+     * @param int 		$res_id The resource id to check if it exists
+     * @param string 	$start_date The start date of the reservation
+     * @param string 	$end_date The end date of the reservation
+     * @param int 		$id Optionl reservation id (needed if you're editing and existing reservation)
+     */
+    public function validate_reservation( $res_id, $start_date, $end_date, $id = FALSE) {
         
         global $wpdb;
         
@@ -117,10 +169,17 @@ class Resource_Booking_DB
         
         // Check if it doesn't overlaps with other reservations
         $reservation_table_name = $wpdb->prefix . 'rb_reservations';
-        $query = 'SELECT * from ' . $reservation_table_name . ' WHERE "' . $start_date . '" < end AND "' . $end_date . '" > start';
+        
+        $query = 'SELECT * from ' . $reservation_table_name . ' WHERE ( "' . $start_date . '" < end AND "' . $end_date . '" > start )';
+        // It's an update
+        if( $id ) {
+            $query = $query . ' AND id != ' . $id;
+        }
+        
+        $query = 'SELECT * from ' . $reservation_table_name . ' WHERE ( "' . $start_date . '" < end AND "' . $end_date . '" > start ) AND id != ' . $id . ";";
         $conflicting_rows = $wpdb->get_results( $query );
         if( $conflicting_rows ) {
-            return FALSE;
+            return $conflicting_rows;
         }
         
         // If all its ok returns TRUE

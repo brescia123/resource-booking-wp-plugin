@@ -100,4 +100,19 @@ class Resource_Booking_Public {
 
 	}
 
+	/**
+	 * return the HTML to be replaced to the shortcode
+	 *
+	 * @since    0.1.0
+	 */
+	public function res_booking_shortcode( $atts, $content = "" ) {
+
+		// Extracts attributes and fill the missing with deafault values
+		extract( shortcode_atts( array(
+        	'resource_id' => '0',
+    	), $atts ) );
+
+		return $resource_id;
+
+	}
 }

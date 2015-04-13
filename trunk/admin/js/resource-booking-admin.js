@@ -4,11 +4,12 @@
     // Document ready
     $(function() {
         var calendar = $('#calendar');
-        var post_id = $('#post_ID').val();
-        var time_interval_select = $('#time-interval');
-        var res_color_select = $('#res-color');
-        var time_interval = '00:' + time_interval_select.find('option:selected').val() + ':00';
-        var res_color = res_color_select.find('option:selected').val();
+        var postId = $('#post_ID').val();
+        var timeIntervalSelect = $('#time-interval');
+        var eventDialog = $('#event-dialog');
+        var resColorSelect = $('#res-color');
+        var timeInterval = '00:' + timeIntervalSelect.find('option:selected').val() + ':00';
+        var resColor = resColorSelect.find('option:selected').val();
 
         // Calendar configuration
         var calendarOpts = {
@@ -20,12 +21,17 @@
             weekends: false,
             defaultView: 'agendaWeek',
             allDaySlot: false,
-            eventColor: res_color,
+            eventColor: resColor,
             selectable: true,
             selectOverlap: false,
             eventOverlap: false,
             editable: true,
-            slotDuration: time_interval,
+            slotDuration: timeInterval,
+            views: {
+                week: {
+                    titleFormat: 'MMMM D YYYY'
+                }
+            },
             eventSources: [{
                 // Get events from the db
                 events: getEvents
@@ -33,9 +39,14 @@
             select: newEvent,
             eventResize: updateEvent,
             eventDrop: updateEvent,
-            eventClick: promptForNewTitle
+            eventClick: showEventDialog
         };
         calendar.fullCalendar(calendarOpts);
+
+
+        /*  
+         *   SERVER COMMUNICATION  
+         */
 
         // Makes a POST request to the server for a new reservation
         function newEvent(start, end, jsEvent, view) {
@@ -43,7 +54,7 @@
             if (title) {
                 var data = {
                         'action': 'res_save_reservation_callback',
-                        'res_id': post_id,
+                        'res_id': postId,
                         'title': title,
                         'start': start.format(),
                         'end': end.format()
@@ -66,7 +77,7 @@
         function getEvents(start, end, timezone, callback) {
             var data = {
                 'action': 'res_reservations_callback',
-                'res_id': post_id,
+                'res_id': postId,
                 'start': start.format(),
                 'end': end.format(),
             }
@@ -86,7 +97,7 @@
             var data = {
                 'action': 'res_update_reservation_callback',
                 'id': event.id,
-                'res_id': post_id,
+                'res_id': postId,
                 'title': event.title,
                 'start': event.start.format(),
                 'end': event.end.format()
@@ -95,7 +106,6 @@
                 var response = JSON.parse(response_json);
 
                 if (response.success) {
-                    //var event = resToEvent(response.reservation);
                     calendar.fullCalendar('updateEvent', event);
                 } else {
                     alert('Error: \n' + response_json);
@@ -104,16 +114,78 @@
             });
         }
 
-        function promptForNewTitle(calEvent, jsEvent, view) {
-            var newTitle = prompt('New name:');
-            if (newTitle) {
-                calEvent.title = newTitle
-                updateEvent(calEvent);
+        // Makes a POST request to the server to delete a reservation
+        function deleteEvent(event) {
+            var data = {
+                'action': 'res_delete_reservation_callback',
+                'id': event.id
             }
+            jQuery.post(ajax_object.ajax_url, data, function(response_json) {
+                var response = JSON.parse(response_json);
+
+                if (response.success) {
+                    calendar.fullCalendar('removeEvents', event.id);
+                } else {
+                    alert('Error: \n' + response_json);
+                }
+            });
+        }
+
+        /*  
+         *   DIALOGS  
+         */
+
+        // Configure event modal
+        eventDialog.dialog({
+            autoOpen: false,
+            dialogClass: 'wp-dialog',
+            resizable: false,
+            closeOnEscape: true,
+            buttons: {
+                'Delete': function() {
+                    var event = $(this).data('event');
+                    deleteEvent(event);
+                    eventDialog.dialog('close');
+                },
+                'Update': function() {
+                    var event = $(this).data('event');
+                    var newTitle = null;
+                    // Check if changed
+                    $(this).find('#reservation-title').on('input', function() {
+                        var newTitle = $(this).find('#reservation-title').val();
+                    });
+                    if (newTitle) {
+                        event.title = newTitle;
+                        updateEvent(event);
+                    }
+                    eventDialog.dialog('close');
+                }
+            }
+        });
+
+        function showEventDialog(calEvent, jsEvent, view) {
+            eventDialog.find('#reservation-start').text(calEvent.start.format('LLLL'));
+            eventDialog.find('#reservation-end').text(calEvent.end.format('LLLL'));
+            eventDialog.find('#reservation-title').val(calEvent.title);
+            eventDialog
+                .data('event', calEvent)
+                .dialog('option', 'title', 'Reservation')
+                .dialog('open');
+        }
+
+        function promptForNewTitle(calEvent, jsEvent, view) {
+            eventDialog
+                .data('')
+                .dialog('open');
+            // var newTitle = prompt('New name:');
+            // if (newTitle) {
+            //     calEvent.title = newTitle
+            //     updateEvent(calEvent);
+            // }
         }
 
         // Reacts to new time interval selection
-        time_interval_select.change(function() {
+        timeIntervalSelect.change(function() {
             var minutesTot = $(this).val();
             var hours = parseInt(minutesTot / 60);
             var minutesRel = minutesTot % 60;
@@ -124,13 +196,14 @@
         });
 
         // Reacts to new resource color selection
-        res_color_select.change(function() {
+        resColorSelect.change(function() {
             var newColor = $(this).val();
-
             calendarOpts.eventColor = newColor;
             calendar.fullCalendar('destroy');
             calendar.fullCalendar(calendarOpts);
         });
+
+
 
         /* Helper Methods */
 
@@ -148,7 +221,7 @@
         // Converts an envent to a reservation object
         var eventToRes = function(event) {
             return {
-                'id': post_id,
+                'id': postId,
                 'title': event.title,
                 'start': event.start.toString(),
                 'end': event.end.toString()

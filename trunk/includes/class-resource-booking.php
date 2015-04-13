@@ -134,6 +134,7 @@ class Resource_Booking {
 		 * The class responsible for defining all actions that occur in the Dashboard.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-resource-booking-admin.php';
+		
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
@@ -172,6 +173,7 @@ class Resource_Booking {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new Resource_Booking_Admin( $this->get_resource_booking(), $this->get_version() );
+		$plugin_public = new Resource_Booking_Public( $this->get_resource_booking(), $this->get_version() );
 		$ajax_callbacks = new Resource_Booking_ajax();
 
 		// Styles and scripts hooks
@@ -181,6 +183,12 @@ class Resource_Booking {
 		$this->loader->add_action( 'add_meta_boxes_resource', $plugin_admin, 'rb_add_metaboxes' );
 		// Store resource postmeta hook
 		$this->loader->add_action( 'save_post_resource', $plugin_admin, 'rb_store_metaboxes' );
+		// Register and configure the editor button
+		$this->loader->add_action( 'init', $plugin_admin, 'res_tinymce_button' );
+
+		// Add the shortcode
+		add_shortcode( 'resource_booking', array( $plugin_public, 'res_booking_shortcode' ) );
+
 		// Ajax hooks (wp_ajax_(action_name))
 		$this->loader->add_action( 'wp_ajax_res_reservations_callback', $ajax_callbacks, 'res_reservations_callback' );
 		$this->loader->add_action( 'wp_ajax_res_save_reservation_callback', $ajax_callbacks, 'res_save_reservation_callback' );

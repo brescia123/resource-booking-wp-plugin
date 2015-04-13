@@ -118,4 +118,44 @@ class Resource_Booking_Admin {
 		$this->resource_metabox->rb_store_mb_values($post_id);
 
 	}
+
+	
+
+	/**
+	 * Called on admin_init hook. Adds the filters to register the TinyMCE button.
+	 *
+	 * @since    0.1.0
+	 */
+	public function res_tinymce_button(){
+
+		if ( current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) ) {
+		    add_filter( 'mce_buttons', array( $this, 'register_res_tinymce_button' ) );
+		    add_filter( 'mce_external_plugins', array( $this, 'add_res_tinymce_button' ) );
+		}
+     
+	}	
+
+	/**
+	 * Called on admin_init hook. Adds the filters to register the TinyMCE button.
+	 *
+	 * @since    0.1.0
+	 */
+	public function register_res_tinymce_button( $buttons ){
+
+		array_push( $buttons, 'res_booking_button');
+     	return $buttons;
+
+	}
+
+	/**
+	 * Add the new button to the editor.
+	 *
+	 * @since    0.1.0
+	 */
+	public function add_res_tinymce_button( $plugin_array ){
+
+		$plugin_array['res_tinymce_button_script'] = plugins_url( '/js/resource-booking-button.js', __FILE__ ) ;
+		return $plugin_array;
+     
+	}
 }

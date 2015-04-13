@@ -121,7 +121,7 @@ class Resource_Booking_DB
         $result = $wpdb->update( $reservation_table_name, $data, $where );
         
         if( !$result ) {
-            return FALSE;
+            return $result;
         } 
         else {
             $reservation = $wpdb->get_row( 'SELECT * from ' . $reservation_table_name . ' WHERE id = ' . $id );

@@ -103,6 +103,8 @@ class Resource_Booking_ajax {
 			if ( $updated_reservation ) {
 				$response->success = TRUE;
 				$response->reservation = $updated_reservation;
+			} else if ( $updated_reservation === 0 ){
+				$response->success = TRUE;
 			} else {
 				$response->success = FALSE;
 			}

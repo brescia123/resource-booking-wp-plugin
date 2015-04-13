@@ -141,6 +141,7 @@
             dialogClass: 'wp-dialog',
             resizable: false,
             closeOnEscape: true,
+            modal: true,
             buttons: {
                 'Delete': function() {
                     var event = $(this).data('event');
@@ -149,12 +150,8 @@
                 },
                 'Update': function() {
                     var event = $(this).data('event');
-                    var newTitle = null;
-                    // Check if changed
-                    $(this).find('#reservation-title').on('input', function() {
-                        var newTitle = $(this).find('#reservation-title').val();
-                    });
-                    if (newTitle) {
+                    var newTitle = $(this).find('#reservation-title').val();
+                    if (newTitle !== event.title) {
                         event.title = newTitle;
                         updateEvent(event);
                     }

@@ -183,8 +183,11 @@ class Resource_Booking {
 		$this->loader->add_action( 'add_meta_boxes_resource', $plugin_admin, 'rb_add_metaboxes' );
 		// Store resource postmeta hook
 		$this->loader->add_action( 'save_post_resource', $plugin_admin, 'rb_store_metaboxes' );
-		// Register and configure the editor button
-		$this->loader->add_action( 'init', $plugin_admin, 'res_tinymce_button' );
+
+		foreach ( array( 'post.php','post-new.php' ) as $hook ) {
+			$this->loader->add_action( "admin_head-$hook", $plugin_admin, 'res_booking_admin_head' );
+		}
+
 
 		// Add the shortcode
 		add_shortcode( 'resource_booking', array( $plugin_public, 'res_booking_shortcode' ) );

@@ -86,15 +86,23 @@ class Resource_Booking_Admin {
 		// Load scripts only on new-resource and reosurce edit pages
 		if ( ('post-new.php' == $hook || 'post.php' == $hook ) && $post->post_type === 'resource' ) {
 
-			wp_enqueue_script( $this->Resource_Booking, plugin_dir_url( __FILE__ ) . 'js/resource-booking-admin.js', array( 'jquery' ), $this->version, false );
+			wp_enqueue_script( $this->Resource_Booking, plugin_dir_url( __FILE__ ) . 'js/resource-booking-admin.js', array( 'jquery', 'jquery-ui-dialog' ), $this->version, false );
 			// in JavaScript, object properties are accessed as ajax_object.*
 			wp_localize_script( $this->Resource_Booking, 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'we_value' => 1234 ) );
 			wp_enqueue_script( 'momentjs', 'http://cdnjs.cloudflare.com/ajax/libs/moment.js/'.self::MOMENT_VERSION.'/moment.min.js', array( 'jquery' ), self::MOMENT_VERSION, true );
 			wp_enqueue_script( 'fullcalendar', 'http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/'.self::FULLCALENDAR_VERSION.'/fullcalendar.min.js', array( 'jquery', 'momentjs' ), self::FULLCALENDAR_VERSION, true );
-			wp_enqueue_script( 'fullcalendar', 'http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/'.self::FULLCALENDAR_VERSION.'/fullcalendar.min.js', array( 'jquery', 'momentjs' ), self::FULLCALENDAR_VERSION, true );
 
-			wp_enqueue_script( 'jquery-ui-dialog' );
 		}
+
+		if ( ('post-new.php' == $hook || 'post.php' == $hook || 'page-new.php' == $hook || 'page.php' == $hook ) && $post->post_type !== 'resource' ) {
+			if ( current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) ) {
+
+				wp_enqueue_script( 'jquery-ui-dialog' );
+		   		add_filter( 'mce_buttons', array( $this, 'register_res_tinymce_button' ) );
+		    	add_filter( 'mce_external_plugins', array( $this, 'add_res_tinymce_button' ) );
+			}
+		}
+
 	}
 
 	/**
@@ -113,34 +121,19 @@ class Resource_Booking_Admin {
 	 *
 	 * @since    0.1.0
 	 */
-	public function rb_store_metaboxes($post_id){
+	public function rb_store_metaboxes($post_id) {
 
 		$this->resource_metabox->rb_store_mb_values($post_id);
 
 	}
-
 	
 
 	/**
-	 * Called on admin_init hook. Adds the filters to register the TinyMCE button.
+	 * Register the new button to the editor.
 	 *
 	 * @since    0.1.0
 	 */
-	public function res_tinymce_button(){
-
-		if ( current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) ) {
-		    add_filter( 'mce_buttons', array( $this, 'register_res_tinymce_button' ) );
-		    add_filter( 'mce_external_plugins', array( $this, 'add_res_tinymce_button' ) );
-		}
-     
-	}	
-
-	/**
-	 * Called on admin_init hook. Adds the filters to register the TinyMCE button.
-	 *
-	 * @since    0.1.0
-	 */
-	public function register_res_tinymce_button( $buttons ){
+	public function register_res_tinymce_button( $buttons ) {
 
 		array_push( $buttons, 'res_booking_button');
      	return $buttons;
@@ -152,10 +145,44 @@ class Resource_Booking_Admin {
 	 *
 	 * @since    0.1.0
 	 */
-	public function add_res_tinymce_button( $plugin_array ){
+	public function add_res_tinymce_button( $plugin_array ) {
 
 		$plugin_array['res_tinymce_button_script'] = plugins_url( '/js/resource-booking-button.js', __FILE__ ) ;
 		return $plugin_array;
      
+	}
+
+	/**
+	 * Add variables to the admin edit page to be accessible through js
+	 *
+	 * @since    0.1.0
+	 */
+	public function res_booking_admin_head () {
+	    global $current_screen;
+	    $type = $current_screen->post_type;
+
+	    if ( ( is_admin() && $type == 'post' || $type == 'page' ) ) {
+		    $plugin_url = plugins_url( '/', __FILE__ );
+		   	// Getting all the Resource names
+			$args = array (
+				'post_type' => 'resource'
+			);
+			$posts_array = get_posts( $args );
+			$resource_titles = array();
+			foreach ($posts_array as $post) {
+				array_push( $resource_titles, $post->post_title );
+			}
+
+		    ?>
+				<!-- TinyMCE Shortcode Plugin -->
+				<script type='text/javascript'>
+				var res_booking = {
+				    'url': '<?php echo $plugin_url; ?>',
+				    'resources': '<?php echo json_encode( $posts_array ); ?>'
+				};
+				</script>
+				<!-- TinyMCE Shortcode Plugin -->
+		    <?php
+	    }
 	}
 }

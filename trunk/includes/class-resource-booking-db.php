@@ -144,6 +144,23 @@ class Resource_Booking_DB
         );
         
         return $wpdb->delete( $reservation_table_name, $where );
+    }    
+
+    /**
+     * Delete all reservations of a given resource
+     *
+     * @since    0.1.0
+     */
+    public function delete_resource_reservations ( $res_id ) {
+        
+        global $wpdb;
+        
+        $reservation_table_name = $wpdb->prefix . 'rb_reservations';
+        $where = array(
+            'resource_id' => $res_id
+        );
+        
+        return $wpdb->delete( $reservation_table_name, $where );
     }
     
     /**

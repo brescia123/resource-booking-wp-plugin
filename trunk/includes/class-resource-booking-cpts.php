@@ -57,4 +57,17 @@ class Resource_Booking_Cpts {
 
 		register_post_type( 'resource', $args ); 
 	}
+
+	/**
+	 * Called when a Resource is deleted. It deletes all the reservations of the the deleted Resource.
+	 *
+	 * @since    0.1.0
+	 */
+	public function delete_resource_reservations($post_id) {
+		$post = get_post($post_id);
+		if( $post->post_type === 'resource' ) {
+			$rb_db = new Resource_Booking_DB();
+			$rb_db->delete_resource_reservations( $post_id );
+		}
+	}
 }

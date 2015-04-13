@@ -188,7 +188,6 @@ class Resource_Booking {
 			$this->loader->add_action( "admin_head-$hook", $plugin_admin, 'res_booking_admin_head' );
 		}
 
-
 		// Add the shortcode
 		add_shortcode( 'resource_booking', array( $plugin_public, 'res_booking_shortcode' ) );
 
@@ -229,7 +228,8 @@ class Resource_Booking {
 
 		// New resource custom post type registration hook
 		$this->loader->add_action( 'init', $plugin_cpts, 'register_cpts' );
-		$this->loader->add_action( 'plugins_loaded', $db_man, 'check_version' );
+		$this->loader->add_action( 'plugins_loaded', $db_man, 'check_version' );// Removed Resource callback
+		$this->loader->add_action( 'delete_post', $plugin_cpts, 'delete_resource_reservations' );
 
 	}
 

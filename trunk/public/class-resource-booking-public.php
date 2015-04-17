@@ -110,10 +110,9 @@ class Resource_Booking_Public {
 		 */
 
 		global $post;
-		if( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'resource_booking') ) {		
+		if( has_shortcode( $post->post_content, 'resource_booking') ) {		
 			wp_enqueue_style( $this->Resource_Booking, plugin_dir_url( __FILE__ ) . 'css/resource-booking-public.css', array(), $this->version, 'all' );
 		}
-
 	}
 
 	/**
@@ -137,7 +136,7 @@ class Resource_Booking_Public {
 
 		// Add script to the page only if there is the plugin shortcode
 		global $post;
-		if( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'resource_booking') ) {
+		if( has_shortcode( $post->post_content, 'resource_booking') ) {
 			wp_enqueue_script( $this->Resource_Booking, plugin_dir_url( __FILE__ ) . 'js/resource-booking-public.js', array( 'jquery' ), $this->version, false );
 			// in JavaScript, object properties are accessed as ajax_object.*
 			wp_localize_script( $this->Resource_Booking, 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'we_value' => 1234 ) );

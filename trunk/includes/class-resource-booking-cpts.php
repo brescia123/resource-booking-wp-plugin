@@ -46,13 +46,14 @@ class Resource_Booking_Cpts {
 			'menu_name'          => 'Resources'
 		);
 		$args = array(
-			'labels'        => $labels,
-			'description'   => 'Holds resources for booking',
-			'public'        => true,
-			'menu_position' => 20,
-			'menu_icon'		=> 'dashicons-screenoptions',
-			'supports'      => array( 'title', 'thumbnail' ),
-			'has_archive'   => true,
+			'labels'        		=> $labels,
+			'description'   		=> 'Holds resources for booking',
+			'public'        		=> false,
+			'publicly_queryable'    => false,
+			'menu_position' 		=> 20,
+			'menu_icon'				=> 'dashicons-screenoptions',
+			'supports'      		=> array( 'title', 'thumbnail' ),
+			'has_archive'   		=> true,
 		);
 
 		register_post_type( 'resource', $args ); 

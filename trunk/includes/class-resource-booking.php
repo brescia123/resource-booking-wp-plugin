@@ -209,8 +209,9 @@ class Resource_Booking {
 
 		$plugin_public = new Resource_Booking_Public( $this->get_resource_booking(), $this->get_version() );
 
-		// Styles and scripts hooks
+		// Styles and scripts hooks (priority of 11 to avoid the theme css to override the calendar one)
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles_fix', 11 );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
 	}

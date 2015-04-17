@@ -26,6 +26,7 @@
             selectOverlap: false,
             eventOverlap: false,
             editable: true,
+            height: 'auto',
             slotDuration: timeInterval,
             views: {
                 week: {

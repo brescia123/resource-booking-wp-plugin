@@ -24,6 +24,7 @@
                 selectable: true,
                 selectOverlap: false,
                 eventOverlap: false,
+                height: 'auto',
                 editable: false,
                 resizable: false,
                 slotDuration: timeInterval,

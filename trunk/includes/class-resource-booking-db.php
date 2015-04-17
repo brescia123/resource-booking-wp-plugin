@@ -193,10 +193,9 @@ class Resource_Booking_DB
             $query = $query . ' AND id != ' . $id;
         }
         
-        $query = 'SELECT * from ' . $reservation_table_name . ' WHERE ( "' . $start_date . '" < end AND "' . $end_date . '" > start ) AND id != ' . $id . ";";
         $conflicting_rows = $wpdb->get_results( $query );
-        if( $conflicting_rows ) {
-            return $conflicting_rows;
+        if( sizeof( $conflicting_rows ) > 0 ) {
+            return FALSE;
         }
         
         // If all its ok returns TRUE

@@ -48,8 +48,10 @@ class Resource_Booking_Cpts {
 		$args = array(
 			'labels'        		=> $labels,
 			'description'   		=> 'Holds resources for booking',
-			'public'        		=> false,
-			'publicly_queryable'    => false,
+			'public'        		=> true,
+			'show_in_nav_menus'   	=> false,
+			'publicly_queryable' 	=> false,
+			'query_var'           	=> false,
 			'menu_position' 		=> 20,
 			'menu_icon'				=> 'dashicons-screenoptions',
 			'supports'      		=> array( 'title', 'thumbnail' ),

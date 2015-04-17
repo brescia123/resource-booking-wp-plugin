@@ -64,18 +64,15 @@ class Resource_Booking_Res_Mb {
 			'desc' 		=> 'The time interval to book the resource', 
 			'id' 		=> 'time-interval',
 			'values' 	=> array(
-				0 => array(
-					'label' => '1/2 hour', 
-					'value' => 30
-					), 
-				1 => array(
-					'label' => '1 hour', 
-					'value' => 60
-					), 
-				2 => array(
-					'label' => '2 hour', 
-					'value' => 120
-					)
+				0 => array('label' => '1/2 hour', 'value' => 30), 
+				1 => array('label' => '1 hour', 'value' => 60), 
+				2 => array('label' => '2 hour', 'value' => 120),
+				3 => array('label' => '3 hour', 'value' => 180),
+				4 => array('label' => '4 hour', 'value' => 240),
+				5 => array('label' => '5 hour', 'value' => 300),
+				6 => array('label' => '6 hour', 'value' => 360),
+				7 => array('label' => '7 hour', 'value' => 420),
+				8 => array('label' => '8 hour', 'value' => 480)
 				)
 		);
 

@@ -194,7 +194,7 @@ class Resource_Booking_DB
         }
         
         $conflicting_rows = $wpdb->get_results( $query );
-        if( sizeof( $conflicting_rows ) > 0 ) {
+        if( is_null( $conflicting_rows ) ) {
             return FALSE;
         }
         

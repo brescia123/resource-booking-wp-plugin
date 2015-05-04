@@ -78,7 +78,8 @@
 
                         if (response.success) {
                             var event = resToEvent(response.reservation);
-                            $(this).fullCalendar('renderEvent', event, true);
+                            var calendar = $('#' + response.reservation.resource_id);
+                            calendar.fullCalendar('renderEvent', event, true);
                         } else {
                             alert('Error: \n' + response_json);
                         }
